@@ -1,3 +1,7 @@
+# Source and Build dir
+jemalloc_src/
+jemalloc_build/
+
 # Prerequisites
 *.d
 
