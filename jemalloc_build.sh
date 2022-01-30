@@ -1,5 +1,6 @@
 #!/bin/bash
 
+ROOT_DIR="$(pwd)"
 SRC="./jemalloc_src"
 BUILD="./jemalloc_build"
 
@@ -84,4 +85,16 @@ cd "$OUTPUT_DIR"
 # Compilation
 eval ../../"$SRC"/configure $BUILD_OPTS
 make
-cd -
+cd "$ROOT_DIR"
+
+# Copy include/ and lib/ directories to a corresponding directory of techniques if it exists
+DEST_DIR="jemalloc_"$JEMALLOC_VERSION
+if [ -d "$DEST_DIR" ] 
+then
+    SRC_DIR=$BUILD"/"$OUTPUT_DIR
+
+    echo "  -> Copying $SRC_DIR/include/ and $SRC_DIR/lib/ to $DEST_DIR"
+    cp -r "$SRC_DIR/include/" "$SRC_DIR/lib/" $DEST_DIR
+else
+    echo "Info: No directory of techniques found to copy include/ and lib/ directories for jemalloc version $JEMALLOC_VERSION"
+fi
