@@ -72,6 +72,7 @@ if [[ $? != 0 ]]; then
 fi
 
 git checkout "tags/$JEMALLOC_VERSION" -f
+git clean -fd
 
 # Autoconf
 if [ -d "jemalloc/" ]; then
