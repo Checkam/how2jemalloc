@@ -74,8 +74,13 @@ fi
 git checkout "tags/$JEMALLOC_VERSION" -f
 
 # Autoconf
+if [ -d "jemalloc/" ]; then
+    # For version < 2.2.2
+    SRC="$SRC/jemalloc"
+    cd jemalloc/
+fi
 autoconf
-cd -
+cd "$ROOT_DIR"  
 
 # Prepare build directory
 mkdir -p "$BUILD"
