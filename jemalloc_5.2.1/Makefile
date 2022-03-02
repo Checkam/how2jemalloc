@@ -1,5 +1,5 @@
 # Variables
-EXE=adjacent-memory use-after-free
+EXE=adjacent-memory use-after-free heap-manipulation
 
 # Usual compilation flags
 CFLAGS=-std=c11 -L lib/ -g -Wl,-rpath=lib/
@@ -12,17 +12,27 @@ LDFLAGS=-ljemalloc
 # Rules and targets
 all: $(EXE)
 
+# adjacent-memory binary
 adjacent-memory: adjacent-memory.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 adjacent-memory.o : adjacent-memory.c 
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 
+# use-after-free binary
 use-after-free: use-after-free.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 use-after-free.o : use-after-free.c 
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
+# heap-manipulation binary
+heap-manipulation: heap-manipulation.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+heap-manipulation.o: heap-manipulation.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
 
 clean:
 	@rm -f *~ *.o $(EXE)

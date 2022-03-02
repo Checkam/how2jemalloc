@@ -1,5 +1,5 @@
 # Variables
-EXE=adjacent-memory use-after-free
+EXE=adjacent-memory use-after-free heap-manipulation
 
 # Usual compilation flags
 CFLAGS=-std=c11 -L lib/ -g -Wl,-rpath=lib/
@@ -25,6 +25,14 @@ use-after-free: use-after-free.o
 
 use-after-free.o : use-after-free.c 
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
+# heap-manipulation binary
+heap-manipulation: heap-manipulation.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+heap-manipulation.o: heap-manipulation.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
 
 clean:
 	@rm -f *~ *.o $(EXE)
