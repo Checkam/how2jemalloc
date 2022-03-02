@@ -15,7 +15,7 @@ if [[ $# < 1 ]]; then
     exit 1
 fi
 
-BUILD_OPTS='--enable-autoconf'
+BUILD_OPTS=''
 JEMALLOC_VERSION=''
 DEBUG_ENABLED=false
 
@@ -26,8 +26,9 @@ while :; do
             exit
             ;;
         --enable-debug)
+            # Use EXTRA_CFLAGS instead of '--enable-debug' because '--enable-debug' add assertions that mask some segmentation fault.
             echo '  -> Enabling debug'
-            BUILD_OPTS="$BUILD_OPTS --enable-debug"
+            BUILD_OPTS="$BUILD_OPTS EXTRA_CFLAGS=-O0 EXTRA_CXXFLAGS=-O0"
             DEBUG_ENABLED=true
             ;;
         '')
@@ -71,10 +72,16 @@ if [[ $? != 0 ]]; then
 fi
 
 git checkout "tags/$JEMALLOC_VERSION" -f
+git clean -fd
 
 # Autoconf
+if [ -d "jemalloc/" ]; then
+    # For version < 2.2.2
+    SRC="$SRC/jemalloc"
+    cd jemalloc/
+fi
 autoconf
-cd -
+cd "$ROOT_DIR"  
 
 # Prepare build directory
 mkdir -p "$BUILD"
@@ -83,7 +90,7 @@ mkdir -p "$OUTPUT_DIR"
 cd "$OUTPUT_DIR"
 
 # Compilation
-eval ../../"$SRC"/configure $BUILD_OPTS
+eval $BUILD_OPTS ../../"$SRC"/configure
 make
 cd "$ROOT_DIR"
 
